@@ -1,4 +1,7 @@
 using HospitalManagement.API.Data;
+using HospitalManagement.API.Interfaces;
+using HospitalManagement.API.Repositories;
+using HospitalManagement.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddControllers();
 builder.Services.AddDbContext<HospitalDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("ConStr")));
+
+builder.Services.AddScoped<IPatientRepository,PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 var app = builder.Build();
 
@@ -21,7 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.MapControllers();
 
 app.Run();
 
